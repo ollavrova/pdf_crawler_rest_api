@@ -1,0 +1,11 @@
+*.py[co]
+__pycache__
+
+venv
+*.db
+*.cfg
+local.py
+
+.idea/
+*.pyc
+
