@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container-fluid" xmlns="http://www.w3.org/1999/html">
+        <div class="row">
+            <div class="col-lg-10 col text-center">
+                <h2>PDF crawler</h2>  </br>
+                <form action="{% url 'home' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% if form.errors %}
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <div class="alert alert-danger">
+                                    <strong>{{ error|escape }}</strong>
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+                    {% endif %}
+                    {{ message }}
+                    <p>Upload a pdf document with links:</p>
+                    {{ form.pdf }}
+                    </br>
+                    </br>
+                    <input type="submit" class="btn btn-info" value="Submit Button">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
