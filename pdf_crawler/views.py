@@ -20,7 +20,7 @@ def home(request):
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             files = {'pdf_file': open(request.FILES['pdf'].name, 'rb')}
-            response = requests.post(request.build_absolute_uri(reverse('document-list')), files=files)
+            response = requests.post(request.build_absolute_uri(reverse('pdf_crawler:document-list')), files=files)
             if response.status_code == 201:
                 message = 'Created: ' + str(response.json())
             else:
@@ -62,8 +62,9 @@ class DocumentList(generics.ListCreateAPIView):
             # create urls and write to document
             urls_number = len(set(urls))
             for url in set(urls):
+                # define alive field - check if url is live
                 alive = requests.get(url)
-                if 400 <= alive.status_code < 500:
+                if alive.status_code >= 400:
                     alive = False
                 else:
                     alive = True
@@ -81,10 +82,11 @@ class DocumentList(generics.ListCreateAPIView):
             document.urls_number = urls_number
             document.save()
 
-        headers = self.get_success_headers(serializer.data)
-        return Response(DocumentUrlsSerializer(document).data,
-                        status=status.HTTP_201_CREATED,
-                        headers=headers)
+            headers = self.get_success_headers(serializer.data)
+            return Response(DocumentUrlsSerializer(document).data,
+                            status=status.HTTP_201_CREATED,
+                            headers=headers)
+        return Response({'Urls not found!'}, status=status.HTTP_404_NOT_FOUND)
 
 
 class DocumentDetail(generics.RetrieveAPIView):
