@@ -22,9 +22,9 @@ def home(request):
             files = {'pdf_file': open(request.FILES['pdf'].name, 'rb')}
             response = requests.post(request.build_absolute_uri(reverse('pdf_crawler:document-list')), files=files)
             if response.status_code == 201:
-                message = 'Created: ' + str(response.json())
+                message = 'Created: {}'.format(str(response.json()))
             else:
-                message = 'Error: ' + str(response.json())
+                message = 'Error: {}'.format(str(response.json()))
     return render(request, 'pdf_crawler/home.html', {'form': form, 'message': message})
 
 
@@ -47,7 +47,7 @@ class DocumentList(generics.ListCreateAPIView):
 
         pdf = request.FILES['pdf_file']
         if pdf.size > 5000000:
-            return Response({'too big pdf file size(more 5 Mb)'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'Error! Too big size of pdf file(more 5 Mb)'}, status=status.HTTP_400_BAD_REQUEST)
         raw = parser.from_file(pdf.name)
         raw = str(raw)
         safe_text = raw.encode('utf-8', errors='ignore')
