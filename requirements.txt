@@ -1,4 +1,4 @@
-django==1.11
+django==1.11.28
 djangorestframework==3.9.4
 requests
 pypdf2
