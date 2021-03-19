@@ -1,5 +1,5 @@
 django==1.11
-djangorestframework==3.9.4
+djangorestframework==3.11.2
 requests
 pypdf2
 
